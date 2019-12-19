@@ -16,6 +16,8 @@ var { height, width } = Dimensions.get("window");
 
 export default class App extends Component {
 
+
+  //CREA VARIABLES  
   constructor(props) {
       super(props);
       this.state = {
@@ -25,6 +27,7 @@ export default class App extends Component {
       }
   }
 
+  //ASIGNA A VARIABLES LOS VALORES DEL JSON 
   componentDidMount() {
       const url = "http://tutofox.com/foodapp/api.json";
       return fetch(url)
@@ -42,14 +45,21 @@ export default class App extends Component {
 
   }
 
+
+  //RENDER 
   render() {
     return (
       <ScrollView>
       <View style={{ flex: 1, backgroundColor: "#f2f2f2" }}>
         <View style={{ width: width, alignItems: 'center'}}>
+         {/* TOPBAR */}
         <Image resizeMode="contain" style={{height: 60, width:width/2, margin:10}} source={{uri: "http://tutofox.com/foodapp/foodapp.png"}}/>
+        
+        {/* SWIPER */}
         <Swiper style={{ height: width/2 }} autoplay={true} autoplayTimeout={2}>
             {
+                
+                //OBTIENE/MAPEA LOS 3 ELEMENTOS DEL JSON "BANNER". IMAGENES
                 this.state.dataBanner.map((itemmap) => {
                     return(
                         <Image style={styles.imagebanner} resizeMode="contain" source={{ uri: itemmap }} />
@@ -61,7 +71,11 @@ export default class App extends Component {
 
         <View style={{ width: width, borderRadius:20, paddingVertical:20, backgroundColor: "white"}}>
     
+        {/* CATEGORIAS */}
         <Text style={styles.titleCat}> Categorias {this.state.selectCat} </Text> 
+        
+        {/* OBTIENE LA DATA DEL JSON, Y ENVIA ITEM A LA FUNCION _renderItem */}
+        
         <FlatList
             horizontal={true}
             data={this.state.dataCategories}
@@ -75,6 +89,7 @@ export default class App extends Component {
     );
   }
 
+  //FUNCIÓN QUE RECIBE ITEM CATEGORIA Y USA LOS DATOS PARA UNA TOUCHABLEOPACITY (ITEM.CAMPO)
   _renderItem(item) {
       return(
         <TouchableOpacity 
