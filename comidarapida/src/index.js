@@ -6,6 +6,7 @@ import { Text,
     Dimensions,
     ScrollView,
     TextInput,
+    TouchableOpacity,
     Image
 } from 'react-native';
 
@@ -18,7 +19,9 @@ export default class App extends Component {
   constructor(props) {
       super(props);
       this.state = {
-          dataBanner:[]
+          dataBanner:[],
+          dataCategories:[],
+          selectCat:0
       }
   }
 
@@ -29,7 +32,8 @@ export default class App extends Component {
       .then((responseJson) => {
           this.setState({
               isLoading: false,
-              dataBanner: responseJson.banner
+              dataBanner: responseJson.banner,
+              dataCategories: responseJson.categories,
           })
       })
       .catch((error)  => {
@@ -54,12 +58,43 @@ export default class App extends Component {
             }
         </Swiper>
         </View>
-        <Text>App Delivery </Text>
+
+        <View style={{ width: width, borderRadius:20, paddingVertical:20, backgroundColor: "white"}}>
+    
+        <Text style={styles.titleCat}> Categorias {this.state.selectCat} </Text> 
+        <FlatList
+            horizontal={true}
+            data={this.state.dataCategories}
+            renderItem={({item}) => this._renderItem(item)}
+            keyExtractor = {(item, index) => index.toString()}
+        />
+        
+        </View>
       </View>
       </ScrollView>
     );
   }
+
+  _renderItem(item) {
+      return(
+        <TouchableOpacity 
+            onPress={()=> this.setState({selectCat: item.id})}
+            style={[styles.divCat, {backgroundColor: item.color}]}>
+            <Image
+                style={{width: 100, height:80}}
+                resizeMode="contain"
+                source={{uri: item.image}}
+            />
+            <Text style={{ fontWeight: 'bold', fontSize: 17 }}>
+                { item.name } 
+            </Text>   
+        </TouchableOpacity>
+      )
+  }
+
 }
+
+
 
 const styles = StyleSheet.create({
     imagebanner: {
@@ -67,6 +102,20 @@ const styles = StyleSheet.create({
         width: width-40,
         borderRadius: 10,
         marginHorizontal: 20
+    },
+    titleCat: {
+        fontSize:30,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 10
+    },
+    divCat: {
+        backgroundColor: 'red',
+        margin: 5,
+        alignItems: 'center',
+        borderRadius: 10,
+        padding: 10
+
     }
 
 })
